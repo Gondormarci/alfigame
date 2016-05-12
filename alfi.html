@@ -6,8 +6,14 @@
 <style>
     #myCanvas{
         border:blue 3px solid;
+        position:relative;
+
         height: 500px;
         width: 500px;
+        vertical-align: middle;
+        top:10%;
+        left:10%;
+
     }
 </style>
 </head>
@@ -15,16 +21,31 @@
 <canvas id="myCanvas">
 
 </canvas>
-<img src="alfi0.png" id="kep">
+<img src="alfi0.png" id="kep" hidden="true">
+<img src="alfi1.png" id="kep1" hidden="true">
 </body>
 <script>
     var gameinterval;
     var c =document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     ctx.fillStyle="#00FF00";
+    var irany="jobb";
+    var terranok=[];
     var terran0={startx:100,starty:100,endx:160,endy:150};
+    var terran1={startx:220,starty:50,endx:250,endy:150};
+    var terran2={startx:0,starty:10,endx:60,endy:150};
+    var terran3={startx:250,starty:110,endx:700,endy:130};
+    var terran4={startx:730,starty:110,endx:900,endy:130};
+
+
+    terranok[0]=terran0;
+    terranok[1]=terran1;
+    terranok[2]=terran2;
+    terranok[3]=terran3;
+    terranok[4]=terran4;
     ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
     var ugras=[false,false,false];
+    var img1=document.getElementById("kep1");
     var alfi={x:10,y:0,img:document.getElementById("kep"),w:100,h:50,prevy:0};
       ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
     var felmegyhandler;
@@ -79,6 +100,96 @@
 
 
     }*/
+    function palyaRajz(){
+        terranok.forEach( function(element,index,aray){
+            ctx.fillRect(element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
+        })
+           }
+    function alulrolUtkozes(){
+        var utkozik=false;
+        terranok.forEach( function(element,index,aray){
+
+            if (!(alfi.y+alfi.h<element.starty||alfi.x>=element.endx ||alfi.x+alfi.w<=element.startx))
+                utkozik=true;
+        })
+        return utkozik;
+    }
+
+ /*   function jobbrolUtkozes(){
+        var utkozik=false;
+        terranok.forEach( function(element,index,aray){
+
+            if (())
+            {utkozik=true;
+                console.log("jobbrol ezzel utkozunk: "+index);
+                return true; }
+        })
+        return utkozik;
+    }
+*/
+
+    function jobbrolUtkozes(){
+        var utkozik=false;
+        terranok.forEach(function(element,index,aray){
+
+            console.log(index);
+            console.log(alfi.x+" <" +parseInt(element.endx));
+            console.log( alfi.x<(parseInt(element.endx)));
+            console.log(alfi.y+alfi.h +" >" +element.starty);
+            console.log(alfi.y+alfi.h>element.starty);
+            console.log(alfi.x +" >"+ parseInt(element.startx));
+            console.log(alfi.x>parseInt(element.startx));
+
+
+              if(alfi.x-5<parseInt(element.endx) && alfi.y+alfi.h>element.starty&&alfi.x>parseInt(element.startx))
+            {utkozik=true;
+                console.log("jobbrol ezzel utkozunk: "+index );
+
+                return true; }
+        })
+        return utkozik;
+    }
+
+
+    function palyaTolas(){
+        if(alfi.x>200)
+        {
+            terranok.forEach(function(element,index,aray) {
+                        element.startx -= 10;
+                        element.endx -= 10;
+
+                    })
+            alfi.x-=10;
+        }
+        if(alfi.x<200)
+        {
+            terranok.forEach(function(element,index,aray) {
+                element.startx += 10;
+                element.endx += 10;
+
+            })
+            alfi.x+=10;
+        }
+
+
+    }
+    function balrolUtkozes(){
+        var utkozik=false;
+    terranok.forEach(function(element,index,aray){
+
+        if ((alfi.w+alfi.x>parseInt(element.startx)-parseInt(5) && alfi.y+alfi.h>element.starty && alfi.x<(parseInt(element.endx)-parseInt(10))) )
+            {utkozik=true;
+           console.log("balrol ezzel utkozunk: "+index );
+                console.log(alfi.w+alfi.x +" >" +(element.startx-5));
+                console.log( alfi.w+alfi.x>element.startx-5);
+                console.log(alfi.y+alfi.h +" >" +element.starty);
+                console.log(alfi.y+alfi.h>element.starty);
+                console.log(alfi.x +" <"+ parseInt(parseInt(element.endx)-parseInt(10)));
+                console.log(alfi.x<parseInt(parseInt(element.endx)-parseInt(10)));
+            return true; }
+    })
+        return utkozik;
+    }
 
     var gombok = [false,false,false];
     var ugras = false;
@@ -106,25 +217,34 @@
     }
 
     function gameLoop(){
-        console.log (alfi.prevy+ " vs "+alfi.y);
+
         if(alfi.prevy!=alfi.y || ugras) {ugorhat=false;}
-        if(alfi.prevy==alfi.y&&!ugras) {console.log(" ugorhatunk"); ugorhat=true;}
+        if(alfi.prevy==alfi.y&&!ugras) { ugorhat=true;}
         alfi.prevy=alfi.y;
         //iranyitas
 
-            if (gombok[0]&& !(alfi.x<terran0.endx+10 && alfi.y+alfi.h>terran0.starty)) alfi.x -= 5;
+          //  if (gombok[0]&& !(alfi.x<terran0.endx+10 && alfi.y+alfi.h>terran0.starty)) alfi.x -= 5;
+        if (gombok[0]&&!jobbrolUtkozes() ) {alfi.x -= 5; irany="bal"; }
 
-            if (gombok[2] &&!(alfi.w+alfi.x>terran0.startx-10 && alfi.y+alfi.h>terran0.starty)) alfi.x += 5;
+           // if (gombok[2] &&!(alfi.w+alfi.x>terran0.startx-10 && alfi.y+alfi.h>terran0.starty)) alfi.x += 5;
 
-            if (gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
+        if (gombok[2] &&!balrolUtkozes() ) {alfi.x += 5; irany="jobb"; }
+
+
+        if (gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
 
         //gravitacio
-        if(alfi.y+alfi.h<terran0.starty||alfi.x>=terran0.endx ||alfi.x+alfi.w<=terran0.startx)
+        //if(alfi.y+alfi.h<terran0.starty||alfi.x>=terran0.endx ||alfi.x+alfi.w<=terran0.startx)
+        if(!alulrolUtkozes())
             alfi.y+=5;
 
         ctx.clearRect(0,0,300,150);
-        ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
+       // ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
+        palyaTolas();
+        palyaRajz();
+        if (irany=="jobb")
             ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+        else ctx.drawImage(img1,alfi.x,alfi.y,alfi.w,alfi.h);
 
     }
 
