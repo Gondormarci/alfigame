@@ -22,12 +22,13 @@
     var c =document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     ctx.fillStyle="#00FF00";
-    var terran0={startx:0,starty:100,endx:105,endy:50};
-    ctx.fillRect(terran0.startx,terran0.starty,terran0.endx,terran0.endy);
+    var terran0={startx:100,starty:100,endx:160,endy:150};
+    ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
     var ugras=[false,false,false];
-    var alfi={x:10,y:0,img:document.getElementById("kep"),w:100,h:50,prevy:10};
+    var alfi={x:10,y:0,img:document.getElementById("kep"),w:100,h:50,prevy:0};
       ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
     var felmegyhandler;
+
     /*window.onload=function(){
         gameinterval=setInterval(gameLoop,10);
 
@@ -81,6 +82,7 @@
 
     var gombok = [false,false,false];
     var ugras = false;
+    var ugorhat=true;
     window.onload=function(){
         ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
 
@@ -104,18 +106,31 @@
     }
 
     function gameLoop(){
-            if (gombok[0]) alfi.x -= 5;
-            if (gombok[2]) alfi.x += 5;
-            if (gombok[1] && alfi.y == terran0.starty - alfi.h) { ugras = true; ugrott = 0;}
-            if (alfi.y < terran0.starty - alfi.h) alfi.y += 5;
+        console.log (alfi.prevy+ " vs "+alfi.y);
+        if(alfi.prevy!=alfi.y || ugras) {ugorhat=false;}
+        if(alfi.prevy==alfi.y&&!ugras) {console.log(" ugorhatunk"); ugorhat=true;}
+        alfi.prevy=alfi.y;
+        //iranyitas
+
+            if (gombok[0]&& !(alfi.x<terran0.endx+10 && alfi.y+alfi.h>terran0.starty)) alfi.x -= 5;
+
+            if (gombok[2] &&!(alfi.w+alfi.x>terran0.startx-10 && alfi.y+alfi.h>terran0.starty)) alfi.x += 5;
+
+            if (gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
+
+        //gravitacio
+        if(alfi.y+alfi.h<terran0.starty||alfi.x>=terran0.endx ||alfi.x+alfi.w<=terran0.startx)
+            alfi.y+=5;
 
         ctx.clearRect(0,0,300,150);
-        ctx.fillRect(terran0.startx,terran0.starty,terran0.endx,terran0.endy);
+        ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
             ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+
     }
 
     var ugrott;
     function ugrasAnimacio(){
+
         if(ugras) felmegy();
     }
      function felmegy(){
@@ -124,6 +139,8 @@
             console.log(ugrott);
             if(ugrott >= 10) {
                 ugras = false;
+                ugorhat=false;
+                ugrott=0;
             }
     }
 </script>
