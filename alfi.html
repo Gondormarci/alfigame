@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+<style>
+    #myCanvas{
+        border:blue 3px solid;
+        height: 500px;
+        width: 500px;
+    }
+</style>
+</head>
+<body>
+<canvas id="myCanvas">
+
+</canvas>
+<img src="alfi0.png" id="kep">
+</body>
+<script>
+    var gameinterval;
+    var c =document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.fillStyle="#00FF00";
+    var terran0={startx:0,starty:100,endx:105,endy:50};
+    ctx.fillRect(terran0.startx,terran0.starty,terran0.endx,terran0.endy);
+    var ugras=[false,false,false];
+    var alfi={x:10,y:0,img:document.getElementById("kep"),w:100,h:50,prevy:10};
+      ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+    var felmegyhandler;
+    /*window.onload=function(){
+        gameinterval=setInterval(gameLoop,10);
+
+
+    }
+
+    //TODO 2 gomb 1szörre
+    //http://stackoverflow.com/questions/5203407/javascript-multiple-keys-pressed-at-once
+    var map=[];
+    //window.addEventListener("keydown",listener);
+    onkeydown = onkeyup = function listener(e)
+    {
+      console.log(e.which);
+        map[e.which] = e.type == 'keydown';
+
+        if(map[e.which])
+        switch (e.which){
+            case 37:alfi.x-=5; break;
+            case 38:if (!ugras[0]&&!ugras[1]&&!ugras[2]) { ugras[0]=true; ugras[1]=true; ugras[2]=true;} break;
+            case 39:alfi.x+=5; break;
+
+        }
+
+    }
+    function gameLoop(){
+        if(alfi.y+alfi.h<terran0.starty||alfi.x>terran0.endx)
+            alfi.y+=1;
+        console.log(alfi.prevy+ " vs "+ alfi.y);
+        if(alfi.prevy!=alfi.y) {
+            ugras[0]=ugras[1]=ugras[2] = false;
+        }
+
+        if(ugras[0]||ugras[1]||ugras[2]){
+        alfi.y-=30;
+            if(ugras[0]){
+                ugras[0]=false;
+            } else if (ugras[1]){
+                ugras[1]=false;
+            } else if (ugras[2]){
+                ugras[2]=false;
+            }
+        }
+
+        alfi.prevy=alfi.y;
+        ctx.clearRect(0,0,300,150);
+        ctx.fillRect(terran0.startx,terran0.starty,terran0.endx,terran0.endy);
+        ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+
+
+    }*/
+
+    var gombok = [false,false,false];
+    var ugras = false;
+    window.onload=function(){
+        ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+
+        window.addEventListener("keydown",function(e){
+            switch (e.which){
+                case 37:gombok[0] = true; break;
+                case 38:gombok[1] = true; break;
+                case 39:gombok[2] = true; break;
+            }
+        });
+
+        window.addEventListener("keyup",function(e){
+            switch (e.which){
+                case 37:gombok[0] = false; break;
+                case 38:gombok[1] = false; break;
+                case 39:gombok[2] = false; break;
+            }
+        });
+        setInterval(gameLoop,10);
+        setInterval(ugrasAnimacio,10);
+    }
+
+    function gameLoop(){
+            if (gombok[0]) alfi.x -= 5;
+            if (gombok[2]) alfi.x += 5;
+            if (gombok[1] && alfi.y == terran0.starty - alfi.h) { ugras = true; ugrott = 0;}
+            if (alfi.y < terran0.starty - alfi.h) alfi.y += 5;
+
+        ctx.clearRect(0,0,300,150);
+        ctx.fillRect(terran0.startx,terran0.starty,terran0.endx,terran0.endy);
+            ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+    }
+
+    var ugrott;
+    function ugrasAnimacio(){
+        if(ugras) felmegy();
+    }
+     function felmegy(){
+            alfi.y -= 11;
+            ugrott++;
+            console.log(ugrott);
+            if(ugrott >= 10) {
+                ugras = false;
+            }
+    }
+</script>
+</body>
+</html>
