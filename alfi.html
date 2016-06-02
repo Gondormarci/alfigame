@@ -5,15 +5,11 @@
     <title></title>
 <style>
     #myCanvas{
-        border:blue 3px solid;
-        position:relative;
 
-        height: 500px;
-        width: 500px;
+        position:absolute;
+        top:0;
+        left:0;
         vertical-align: middle;
-        top:10%;
-        left:10%;
-
     }
 </style>
 </head>
@@ -21,33 +17,70 @@
 <canvas id="myCanvas">
 
 </canvas>
-<img src="alfi0.png" id="kep" hidden="true">
-<img src="alfi1.png" id="kep1" hidden="true">
+<img src="Jungle-Road-Background-Wallpaper-HD.jpg" id="hatterkep" hidden="true">
+<img src="sas.png" id="sasimg" hidden="true">
+<img src="alfi11.png" id="alfijobb1" hidden="true">
+<img src="alfi01.png" id="alfijobb2" hidden="true">
+<img src="alfi00.png" id="alfibal1" hidden="true">
+<img src="alfi10.png" id="alfibal2" hidden="true">
+<img src="legy.png" id="legykep" hidden="true">
+
 </body>
 <script>
     var gameinterval;
     var c =document.getElementById("myCanvas");
+
+    c.height=window.innerHeight;
+    c.width=window.innerWidth;
+
+
     var ctx = c.getContext("2d");
     ctx.fillStyle="#00FF00";
     var irany="jobb";
-    var terranok=[];
-    var terran0={startx:100,starty:100,endx:160,endy:150};
-    var terran1={startx:220,starty:50,endx:250,endy:150};
-    var terran2={startx:0,starty:10,endx:60,endy:150};
-    var terran3={startx:250,starty:110,endx:700,endy:130};
-    var terran4={startx:730,starty:110,endx:900,endy:130};
 
+    var legycount=0;
+    var terranok=[];
+    var legyek=[];
+    var sasok=[];
+    var sasindex=0;
+    var tick=0;
+
+    var legy0={startx:150,starty:450,endx:170,endy:470};
+    var terran0={startx:100,starty:500,endx:160,endy:550};
+    var terran1={startx:220,starty:450,endx:250,endy:550};
+    var terran2={startx:0,starty:470,endx:60,endy:550};
+    var terran3={startx:250,starty:510,endx:700,endy:530};
+    var terran4={startx:730,starty:510,endx:900,endy:530};
+    var terran5={startx:1000,starty:510,endx:1040,endy:530};
+    var terran6={startx:1200,starty:510,endx:1500,endy:530};
+ ctx.fillRect(600,600,40,40);
 
     terranok[0]=terran0;
     terranok[1]=terran1;
     terranok[2]=terran2;
     terranok[3]=terran3;
     terranok[4]=terran4;
+    terranok[5]=terran5;
+    terranok[6]=terran6;
+
+    legyek[0]=legy0;
+  console.log("wtf1");
     ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
     var ugras=[false,false,false];
-    var img1=document.getElementById("kep1");
-    var alfi={x:10,y:0,img:document.getElementById("kep"),w:100,h:50,prevy:0};
-      ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+   // var img1=document.getElementById("kep1");
+    var alfi={x:10,y:400,w:100,h:50,prevy:0};
+    var alfib1=document.getElementById("alfibal1");
+    var alfib2=document.getElementById("alfibal2");
+    var alfij1=document.getElementById("alfijobb1");
+    var alfij2=document.getElementById("alfijobb2");
+    var hatter=document.getElementById("hatterkep");
+    var saskep=document.getElementById("sasimg");
+
+      ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
+
+    var legykep=document.getElementById("legykep");
+
+    var gameinterval;
     var felmegyhandler;
 
     /*window.onload=function(){
@@ -105,6 +138,29 @@
             ctx.fillRect(element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
         })
            }
+    function legyekRajz(){
+        legyek.forEach( function(element,index,aray){
+            ctx.drawImage(legykep,element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
+        })
+    }
+    function sasokRajz(){
+        sasok.forEach( function(element,index,aray){
+            ctx.drawImage(saskep,element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
+        })
+
+    }
+    function megnyalta(){
+        legyek.forEach( function(element,index,aray){
+           // console.log("legycsek:"+ index);
+            if (element.startx>alfi.x&& element.startx<alfi.x+alfi.w&&element.starty>alfi.y&&element.starty<alfi.y+alfi.h) {
+                console.log("legynyalas");
+                legycount++;
+                legyek.splice(index, 1);
+
+
+            }
+        })
+    }
     function alulrolUtkozes(){
         var utkozik=false;
         terranok.forEach( function(element,index,aray){
@@ -131,17 +187,18 @@
     function jobbrolUtkozes(){
         var utkozik=false;
         terranok.forEach(function(element,index,aray){
-
+/*
             console.log(index);
-            console.log(alfi.x+" <" +parseInt(element.endx));
-            console.log( alfi.x<(parseInt(element.endx)));
             console.log(alfi.y+alfi.h +" >" +element.starty);
             console.log(alfi.y+alfi.h>element.starty);
+            console.log(alfi.x+" <" +parseInt(element.endx));
+            console.log( alfi.x<(parseInt(element.endx)));
+
             console.log(alfi.x +" >"+ parseInt(element.startx));
             console.log(alfi.x>parseInt(element.startx));
+*/
 
-
-              if(alfi.x-5<parseInt(element.endx) && alfi.y+alfi.h>element.starty&&alfi.x>parseInt(element.startx))
+              if(alfi.y+alfi.h>element.starty&&alfi.x-5<parseInt(element.endx) && alfi.x>parseInt(element.startx))
             {utkozik=true;
                 console.log("jobbrol ezzel utkozunk: "+index );
 
@@ -149,25 +206,81 @@
         })
         return utkozik;
     }
+//sasok.splice(index, 1);
+    function berepules(){
+        sasok.forEach(function(element,index,aray) {
+            if (element.targetx>element.startx){
+                element.endx += 5;
+                element.startx += 5;
+            }
+            else {
+                element.startx -= 5;
+                element.endx -= 5;
+            }
+            element.starty += 2;
+            element.endy += 2;
 
+        })
+        sasok.forEach(function(element,index,aray) {
+            if (element.startx < alfi.x && element.endx > alfi.x + alfi.w && element.starty < alfi.y && element.endy > alfi.y + alfi.h)
+            {
+                halal();
+            }
+        })
 
+        var x=Math.random();
+        var y=Math.random();
+        if (x<0.01){
+            if (y>0.5) {
+                var s = {startx:0,endx:200,starty:0,endy:200,targetx:alfi.x,targety:alfi.y} ;
+            }
+            else{
+                var s = {startx:1200,endx:1400,starty:0,endy:200,targetx:alfi.x,targety:alfi.y};
+            }
+            sasok[sasindex]=s;
+            sasindex++;
+            if (sasindex>1000) sasindex=0;
+        }
+
+    }
     function palyaTolas(){
-        if(alfi.x>200)
+        if(alfi.x>800)
         {
             terranok.forEach(function(element,index,aray) {
                         element.startx -= 10;
                         element.endx -= 10;
 
                     })
+            legyek.forEach(function(element,index,aray) {
+                element.startx -= 10;
+                element.endx -= 10;
+
+            })
+           /* sasok.forEach(function(element,index,aray) {
+                element.startx -= 10;
+                element.endx -= 10;
+
+            })*/
             alfi.x-=10;
+
         }
-        if(alfi.x<200)
+        if(alfi.x<300)
         {
             terranok.forEach(function(element,index,aray) {
                 element.startx += 10;
                 element.endx += 10;
 
             })
+            legyek.forEach(function(element,index,aray) {
+                element.startx += 10;
+                element.endx += 10;
+
+            })
+            /*sasok.forEach(function(element,index,aray) {
+                element.startx += 10;
+                element.endx += 10;
+
+            })*/
             alfi.x+=10;
         }
 
@@ -179,13 +292,14 @@
 
         if ((alfi.w+alfi.x>parseInt(element.startx)-parseInt(5) && alfi.y+alfi.h>element.starty && alfi.x<(parseInt(element.endx)-parseInt(10))) )
             {utkozik=true;
-           console.log("balrol ezzel utkozunk: "+index );
+        /*   console.log("balrol ezzel utkozunk: "+index );
                 console.log(alfi.w+alfi.x +" >" +(element.startx-5));
                 console.log( alfi.w+alfi.x>element.startx-5);
                 console.log(alfi.y+alfi.h +" >" +element.starty);
                 console.log(alfi.y+alfi.h>element.starty);
                 console.log(alfi.x +" <"+ parseInt(parseInt(element.endx)-parseInt(10)));
                 console.log(alfi.x<parseInt(parseInt(element.endx)-parseInt(10)));
+                */
             return true; }
     })
         return utkozik;
@@ -195,7 +309,7 @@
     var ugras = false;
     var ugorhat=true;
     window.onload=function(){
-        ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
+        ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
 
         window.addEventListener("keydown",function(e){
             switch (e.which){
@@ -212,40 +326,55 @@
                 case 39:gombok[2] = false; break;
             }
         });
-        setInterval(gameLoop,10);
+        gameinterval=setInterval(gameLoop,10);
         setInterval(ugrasAnimacio,10);
     }
 
     function gameLoop(){
-
+        if (alfi.y>500) halal();
         if(alfi.prevy!=alfi.y || ugras) {ugorhat=false;}
         if(alfi.prevy==alfi.y&&!ugras) { ugorhat=true;}
-        alfi.prevy=alfi.y;
+
         //iranyitas
 
           //  if (gombok[0]&& !(alfi.x<terran0.endx+10 && alfi.y+alfi.h>terran0.starty)) alfi.x -= 5;
-        if (gombok[0]&&!jobbrolUtkozes() ) {alfi.x -= 5; irany="bal"; }
+        if (gombok[0]&&!jobbrolUtkozes() ) {alfi.x -= 5; irany="bal"; if(alfi.prevy==alfi.y) tick++;  }
 
            // if (gombok[2] &&!(alfi.w+alfi.x>terran0.startx-10 && alfi.y+alfi.h>terran0.starty)) alfi.x += 5;
 
-        if (gombok[2] &&!balrolUtkozes() ) {alfi.x += 5; irany="jobb"; }
+        if (gombok[2] &&!balrolUtkozes() ) {alfi.x += 5; irany="jobb";  if(alfi.prevy==alfi.y)  tick++; }
 
 
         if (gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
-
+        alfi.prevy=alfi.y;
+        berepules();
         //gravitacio
         //if(alfi.y+alfi.h<terran0.starty||alfi.x>=terran0.endx ||alfi.x+alfi.w<=terran0.startx)
         if(!alulrolUtkozes())
-            alfi.y+=5;
+            alfi.y+=1;
 
-        ctx.clearRect(0,0,300,150);
+        ctx.clearRect(0,0,c.width, c.height);
        // ctx.fillRect(terran0.startx,terran0.starty,terran0.endx-terran0.startx,terran0.endy-terran0.starty);
-        palyaTolas();
+        ctx.drawImage(hatter,0,0);
         palyaRajz();
-        if (irany=="jobb")
-            ctx.drawImage(alfi.img,alfi.x,alfi.y,alfi.w,alfi.h);
-        else ctx.drawImage(img1,alfi.x,alfi.y,alfi.w,alfi.h);
+        sasokRajz();
+        palyaTolas();
+        legyekRajz();
 
+        if (tick<10){
+            if (irany=="jobb")
+                ctx.drawImage(alfij2,alfi.x,alfi.y,alfi.w,alfi.h);
+            else ctx.drawImage(alfib2,alfi.x,alfi.y,alfi.w,alfi.h);
+
+        }
+        else {
+        if (irany=="jobb")
+            ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
+        else ctx.drawImage(alfib1,alfi.x,alfi.y,alfi.w,alfi.h);
+        }
+
+        if (tick>=20) tick=0;
+        megnyalta();
     }
 
     var ugrott;
@@ -253,11 +382,18 @@
 
         if(ugras) felmegy();
     }
+
+    function halal(){
+        alert("meghaltal");
+        clearInterval(gameinterval);
+    }
      function felmegy(){
-            alfi.y -= 11;
+            alfi.y -= 2;
             ugrott++;
-            console.log(ugrott);
-            if(ugrott >= 10) {
+           // console.log(ugrott);
+       //  console.log( alfi.y);
+
+         if(ugrott >= 50) {
                 ugras = false;
                 ugorhat=false;
                 ugrott=0;
