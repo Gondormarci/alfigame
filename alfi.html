@@ -19,6 +19,8 @@
 </canvas>
 <img src="Jungle-Road-Background-Wallpaper-HD.jpg" id="hatterkep" hidden="true">
 <img src="sas.png" id="sasimg" hidden="true">
+<img src="alfik1.png" id="alfikjobb" hidden="true">
+<img src="alfik0.png" id="alfikbal" hidden="true">
 <img src="alfi11.png" id="alfijobb1" hidden="true">
 <img src="alfi01.png" id="alfijobb2" hidden="true">
 <img src="alfi00.png" id="alfibal1" hidden="true">
@@ -38,6 +40,8 @@
     ctx.fillStyle="#00FF00";
     var irany="jobb";
 
+    var kamo=false;
+    var kamocd=false;
     var legycount=0;
     var terranok=[];
     var legyek=[];
@@ -53,6 +57,14 @@
     var terran4={startx:730,starty:510,endx:900,endy:530};
     var terran5={startx:1000,starty:510,endx:1040,endy:530};
     var terran6={startx:1200,starty:510,endx:1500,endy:530};
+    var terran7={startx:1300,starty:500,endx:1550,endy:550};
+    var terran8={startx:1500,starty:450,endx:2050,endy:550};
+    var terran9={startx:2300,starty:470,endx:2400,endy:550};
+    var terran10={startx:2700,starty:510,endx:2800,endy:530};
+    var terran11={startx:3000,starty:510,endx:3100,endy:530};
+    var terran12={startx:3300,starty:510,endx:3540,endy:530};
+    var terran13={startx:3800,starty:510,endx:4500,endy:530};
+
  ctx.fillRect(600,600,40,40);
 
     terranok[0]=terran0;
@@ -62,6 +74,13 @@
     terranok[4]=terran4;
     terranok[5]=terran5;
     terranok[6]=terran6;
+    terranok[7]=terran7;
+    terranok[8]=terran8;
+    terranok[9]=terran9;
+    terranok[10]=terran10;
+    terranok[11]=terran11;
+    terranok[12]=terran12;
+    terranok[13]=terran13;
 
     legyek[0]=legy0;
   console.log("wtf1");
@@ -69,6 +88,8 @@
     var ugras=[false,false,false];
    // var img1=document.getElementById("kep1");
     var alfi={x:10,y:400,w:100,h:50,prevy:0};
+    var alfikb=document.getElementById("alfikbal");
+    var alfikj=document.getElementById("alfikjobb");
     var alfib1=document.getElementById("alfibal1");
     var alfib2=document.getElementById("alfibal2");
     var alfij1=document.getElementById("alfijobb1");
@@ -206,10 +227,23 @@
         })
         return utkozik;
     }
+    function alcazas() {
+        if (!kamocd) {
+            kamo = true;
+
+            setTimeout(function () {
+                kamo = false; kamocd = true;
+            }, 2000);
+            setTimeout(function () {
+                kamocd = false;
+            }, 6000);
+        }
+    }
 //sasok.splice(index, 1);
     function berepules(){
         sasok.forEach(function(element,index,aray) {
-            if (element.targetx>element.startx){
+        if(!element.vissza) {
+            if (element.targetx > element.startx) {
                 element.endx += 5;
                 element.startx += 5;
             }
@@ -219,12 +253,28 @@
             }
             element.starty += 2;
             element.endy += 2;
+        }
+            else {
+            if (element.targetx > element.startx) {
+                element.endx -=5;
+                element.startx -= 5;
+            }
+            else {
+                element.startx += 5;
+                element.endx += 5;
+            }
+            element.starty -= 2;
+            element.endy -= 2;
+        }
 
         })
         sasok.forEach(function(element,index,aray) {
             if (element.startx < alfi.x && element.endx > alfi.x + alfi.w && element.starty < alfi.y && element.endy > alfi.y + alfi.h)
             {
-                halal();
+                if (!kamo) halal();
+            }
+            if (element.starty>700) {
+                sasok.splice(index,1);
             }
         })
 
@@ -232,10 +282,10 @@
         var y=Math.random();
         if (x<0.01){
             if (y>0.5) {
-                var s = {startx:0,endx:200,starty:0,endy:200,targetx:alfi.x,targety:alfi.y} ;
+                var s = {startx:0,endx:200,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false} ;
             }
             else{
-                var s = {startx:1200,endx:1400,starty:0,endy:200,targetx:alfi.x,targety:alfi.y};
+                var s = {startx:1200,endx:1400,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false};
             }
             sasok[sasindex]=s;
             sasindex++;
@@ -256,6 +306,11 @@
                 element.endx -= 10;
 
             })
+            sasok.forEach(function(element,index,aray) {
+                element.targetx -= 10;
+
+
+            })
            /* sasok.forEach(function(element,index,aray) {
                 element.startx -= 10;
                 element.endx -= 10;
@@ -274,6 +329,11 @@
             legyek.forEach(function(element,index,aray) {
                 element.startx += 10;
                 element.endx += 10;
+
+            })
+            sasok.forEach(function(element,index,aray) {
+                element.targetx += 10;
+
 
             })
             /*sasok.forEach(function(element,index,aray) {
@@ -316,6 +376,7 @@
                 case 37:gombok[0] = true; break;
                 case 38:gombok[1] = true; break;
                 case 39:gombok[2] = true; break;
+                case 32:alcazas();
             }
         });
 
@@ -338,14 +399,14 @@
         //iranyitas
 
           //  if (gombok[0]&& !(alfi.x<terran0.endx+10 && alfi.y+alfi.h>terran0.starty)) alfi.x -= 5;
-        if (gombok[0]&&!jobbrolUtkozes() ) {alfi.x -= 5; irany="bal"; if(alfi.prevy==alfi.y) tick++;  }
+        if (!kamo&&gombok[0]&&!jobbrolUtkozes() ) {alfi.x -= 5; irany="bal"; if(alfi.prevy==alfi.y) tick++;  }
 
            // if (gombok[2] &&!(alfi.w+alfi.x>terran0.startx-10 && alfi.y+alfi.h>terran0.starty)) alfi.x += 5;
 
-        if (gombok[2] &&!balrolUtkozes() ) {alfi.x += 5; irany="jobb";  if(alfi.prevy==alfi.y)  tick++; }
+        if (!kamo&&gombok[2] &&!balrolUtkozes() ) {alfi.x += 5; irany="jobb";  if(alfi.prevy==alfi.y)  tick++; }
 
 
-        if (gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
+        if (!kamo&&gombok[1] && ugorhat) { ugras = true; ugrott = 0;}
         alfi.prevy=alfi.y;
         berepules();
         //gravitacio
@@ -363,14 +424,29 @@
 
         if (tick<10){
             if (irany=="jobb")
-                ctx.drawImage(alfij2,alfi.x,alfi.y,alfi.w,alfi.h);
-            else ctx.drawImage(alfib2,alfi.x,alfi.y,alfi.w,alfi.h);
+            {
+                if (kamo) ctx.drawImage(alfikj,alfi.x,alfi.y,alfi.w,alfi.h);
+                else ctx.drawImage(alfij2,alfi.x,alfi.y,alfi.w,alfi.h);
+            }
+
+            else
+            {
+                if (kamo) ctx.drawImage(alfikb,alfi.x,alfi.y,alfi.w,alfi.h);
+                else ctx.drawImage(alfib2,alfi.x,alfi.y,alfi.w,alfi.h);
+            }
 
         }
         else {
         if (irany=="jobb")
-            ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
-        else ctx.drawImage(alfib1,alfi.x,alfi.y,alfi.w,alfi.h);
+        {
+             if (kamo) ctx.drawImage(alfikj,alfi.x,alfi.y,alfi.w,alfi.h);
+           else ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
+        }
+        else
+        {
+            if (kamo) ctx.drawImage(alfikj,alfi.x,alfi.y,alfi.w,alfi.h);
+            else ctx.drawImage(alfib1,alfi.x,alfi.y,alfi.w,alfi.h);
+        }
         }
 
         if (tick>=20) tick=0;
