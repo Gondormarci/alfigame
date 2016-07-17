@@ -18,6 +18,7 @@
 
 </canvas>
 <img src="Jungle-Road-Background-Wallpaper-HD.jpg" id="hatterkep" hidden="true">
+<img src="fal.png" id="falkep" hidden="true">
 <img src="sas.png" id="sasimg" hidden="true">
 <img src="alfik1.png" id="alfikjobb" hidden="true">
 <img src="alfik0.png" id="alfikbal" hidden="true">
@@ -96,8 +97,7 @@
     var alfij2=document.getElementById("alfijobb2");
     var hatter=document.getElementById("hatterkep");
     var saskep=document.getElementById("sasimg");
-
-      ctx.drawImage(alfij1,alfi.x,alfi.y,alfi.w,alfi.h);
+    var falkep=document.getElementById("falkep");
 
     var legykep=document.getElementById("legykep");
 
@@ -156,7 +156,8 @@
     }*/
     function palyaRajz(){
         terranok.forEach( function(element,index,aray){
-            ctx.fillRect(element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
+            //ctx.fillRect(element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
+            ctx.drawImage(falkep,element.startx,element.starty,element.endx-element.startx,element.endy-element.starty);
         })
            }
     function legyekRajz(){
@@ -242,24 +243,32 @@
 //sasok.splice(index, 1);
     function berepules(){
         sasok.forEach(function(element,index,aray) {
-        if(!element.vissza) {
-            if (element.targetx > element.startx) {
+        if(!element.vissza){
+
+            if (element.balrol&&element.startx<element.targetx) {
                 element.endx += 5;
                 element.startx += 5;
             }
-            else {
+            else if(!element.balrol&&element.startx>element.targetx){
                 element.startx -= 5;
                 element.endx -= 5;
             }
             element.starty += 2;
             element.endy += 2;
+
+            //if(Math.abs(element.targetx-element.startx)<=10)
+            if(element.endy>alfi.y+alfi.h+50)
+            {
+             console.log("irany vissza");
+             element.vissza=true;
+            }
         }
-            else {
-            if (element.targetx > element.startx) {
+        if(element.vissza) { console.log("viszsmaegyünk");
+            if (!element.balrol) {
                 element.endx -=5;
                 element.startx -= 5;
             }
-            else {
+            if(element.balrol){
                 element.startx += 5;
                 element.endx += 5;
             }
@@ -282,10 +291,10 @@
         var y=Math.random();
         if (x<0.01){
             if (y>0.5) {
-                var s = {startx:0,endx:200,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false} ;
+                var s = {startx:0,endx:200,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false,balrol:true} ;
             }
             else{
-                var s = {startx:1200,endx:1400,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false};
+                var s = {startx:1200,endx:1400,starty:0,endy:200,targetx:alfi.x,targety:alfi.y,vissza:false, balrol:false};
             }
             sasok[sasindex]=s;
             sasindex++;
